@@ -21,7 +21,7 @@ require(ROAuth)
 require(dplyr)
 
 # get today/yesterday dates
-date_today <- as.Date(Sys.time())
+date_today <- as.Date(Sys.time(), tz=Sys.timezone(location = TRUE))
 date_yesterday <- date_today-days(1)
 
 # search string: what will you search twitter for?
