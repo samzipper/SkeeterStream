@@ -22,7 +22,7 @@ require(dplyr)
 
 # get today/yesterday dates
 date_today <- as.Date(Sys.time(), tz=Sys.timezone(location = TRUE))
-date_yesterday <- date_today-days(1)
+date_yesterday <- date_today-days(3)
 
 # search string: what will you search twitter for?
 search.str <- paste0("(mosquito OR mosquitos OR mosquitoes) since:", as.character(date_yesterday), " until:", as.character(date_today), " lang:en")
