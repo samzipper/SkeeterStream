@@ -19,10 +19,11 @@ require(maptools)
 require(DBI)
 require(ROAuth)
 require(dplyr)
+require(httpuv)
 
 # get today/yesterday dates
 date_today <- as.Date(Sys.time(), tz=Sys.timezone(location = TRUE))
-date_yesterday <- date_today-days(3)
+date_yesterday <- date_today-days(1)
 
 # search string: what will you search twitter for?
 search.str <- paste0("(mosquito OR mosquitos OR mosquitoes) since:", as.character(date_yesterday), " until:", as.character(date_today), " lang:en")
@@ -46,12 +47,16 @@ sink(s, type="message")
 # status update
 print(paste0("starting, from ", date_yesterday, " to ", date_today))
 
+# read in token which was created with script rtweet_SetUpToken.R
+r.token <- readRDS(file.path(path.expand("~/"), "twitter_token_skeeter.Rds"))
+
 # search twitter!
 tweets <- search_tweets2(search.str,
                          n=10000, 
                          type="recent",
                          include_rts=F,
-                         retryOnRateLimit=T)
+                         retryOnRateLimit=T,
+                         token=r.token)
 
 # subset to yesterday only, just in case...
 df <- subset(tweets, created_at >= date_yesterday & created_at < date_today)

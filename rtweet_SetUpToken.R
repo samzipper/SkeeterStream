@@ -14,10 +14,10 @@ require(rtweet)
 appname <- "SkeeterStream"
 
 ## api key
-key <- "yrqbPnvreu8coSw6mkZ69Yoaj"
+key <- "AAA"
 
 ## api secret
-secret <- "uS6PuCiEH3Gjz7PVmaMkWAX3wai4wAr0iAKDGwGO8Mn4fAeClT"
+secret <- "BBB"
 
 ## create token named "twitter_token"
 twitter_token <- create_token(
@@ -29,7 +29,7 @@ twitter_token <- create_token(
 home_directory <- path.expand("~/")
 
 ## combine with name for token
-file_name <- file.path(home_directory, "twitter_token.Rds")
+file_name <- file.path(home_directory, "twitter_token_skeeter.Rds")
 
 ## save token to home directory
 saveRDS(twitter_token, file = file_name)
