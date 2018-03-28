@@ -15,6 +15,7 @@ require(rtweet)
 require(lubridate)
 require(ggmap)
 require(stringr)
+require(stringi)
 require(maptools)
 require(DBI)
 require(ROAuth)
@@ -91,7 +92,10 @@ df.users$location <- trimws(df.users$location)
 locations <- unique(df.users$location)
 
 # get rid of any locations that are empty
-locations <- locations[!(locations %in% c(" ", ""))]
+locations <- trimws(locations)
+locations <- locations[!is.na(locations)]
+locations <- locations[!is.null(locations)]
+locations <- locations[!stri_isempty(locations)]
 
 # figure out which locations have already been geocoded
 locations.exist <- locations[str_to_lower(locations) %in% str_to_lower(df.in$location)]
