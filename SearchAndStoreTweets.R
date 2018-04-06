@@ -69,11 +69,20 @@ df <- subset(tweets, created_at >= date_yesterday & created_at < date_today)
 # get rid of duplicates just in case
 df <- unique(df)
 
+# tweets status
+print(paste0(dim(df)[1], " tweets"))
+
 ## using Google Maps API, get estimated geographic coordinates based on user location
 # limit of 2500/day! so, get clean location as much as possible first to minimize calls to API
 
 # get user location
-df.users <- lookup_users(df$screen_name)
+users.unique <- unique(df$screen_name)
+print(paste0(length(users.unique), " screen names"))
+df.users <- lookup_users(users.unique, 
+                         token=r.token)
+
+# users status
+print(paste0(dim(df.users)[1], " users"))
 
 # trim to only users with location info
 df.users <- df.users[df.users$location != "",]
@@ -170,16 +179,3 @@ print(paste0(dim(df.out)[1], " tweets added to database"))
 
 # close sink
 close(s)
-sink()
-sink(type="message")
-close(s)
-
-# # make a plot
-# state_map <- map_data("state")
-# p.map <-
-#   ggplot(data=df.out, aes(x=lon.location, y=lat.location)) +
-#   geom_path(data=state_map, color="blue", aes(x=long, y=lat, group=factor(region))) +
-#   geom_point(shape=21) +
-#   coord_map() +
-#   theme_bw() +
-#   theme(panel.grid=element_blank())

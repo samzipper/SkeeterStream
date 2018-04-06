@@ -17,7 +17,7 @@ r.token <- readRDS(file.path(path.expand("~/"), "twitter_token_skeeter.Rds"))
 
 # search twitter!
 tweets <- search_tweets2(search.str,
-                         n=10000, 
+                         n=25, 
                          type="recent",
                          include_rts=F,
                          retryOnRateLimit=T,
@@ -28,7 +28,8 @@ df <- unique(tweets)
 
 # get user location
 users.unique <- unique(df$screen_name)
-df.users <- lookup_users(users.unique)
+df.users <- lookup_users(users.unique,
+                         token=r.token)
 
 # print some diagnostics
 print(paste0(dim(df)[1], " tweets"))
