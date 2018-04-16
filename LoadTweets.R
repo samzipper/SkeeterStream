@@ -61,7 +61,7 @@ p.bar.tweets.DOY <-
   ggplot(df.d, aes(x=Date, y=tweets)) +
   geom_bar(stat="identity") +
   geom_hline(yintercept=0, color="gray65") +
-  labs(title="Number of Mosquito Tweets", 
+  labs(title=paste0(sum(df.d$tweets), " Mosquito Tweets"), 
        subtitle="Search Term: (mosquito OR mosquitos OR mosquitoes)") +
   scale_y_continuous(name="# Tweets") +
   theme_bw() +
