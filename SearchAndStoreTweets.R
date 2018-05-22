@@ -117,27 +117,61 @@ locations <- locations[!(locations %in% locations.exist)]
 # status update
 print(paste0(length(locations), " locations to geocode"))
 
-# call geocode
-geo.out <- geocode(locations, source="google", output="all")
+# make vector to hold empty locations
+lat.location <- rep(NaN, length(locations))
+lon.location <- rep(NaN, length(locations))
+success <- rep(F, length(locations))
 
-## filter output
-# status check: did geocode find a location?
-check.status <- sapply(geo.out, function(x) x["status"]=="OK" & length(x["status"])>0)
-check.status[is.na(check.status)] <- F
-geo.out <- geo.out[check.status]
-locations <- locations[check.status]
-
-# status check: is location ambiguous?
-check.ambig <- sapply(lapply(geo.out, lapply, length), function(x) x["results"]=="1")
-geo.out <- geo.out[check.ambig]
-locations <- locations[check.ambig]
+# call geocode for each location
+maxtries <- 5
+for (l in 1:length(locations)){
+  check.geocode <- F
+  check.status <- F
+  tries <- 0
+  while (!check.geocode & tries <= maxtries){
+    # count number of tries
+    tries <- tries + 1
+    
+    # geocode
+    l.geo <- ggmap::geocode(locations[l], source="google", output="all")
+    
+    # check if success
+    if (l.geo$status != "OVER_QUERY_LIMIT") check.geocode <- T
+    if (l.geo$status == "OK") check.status <- T
+  }
+  
+  if (check.status){
+    # check if location not ambiguous
+    check.ambig <- if (length(l.geo$results)==1) T else F
+    
+    # check if location resolved to state level
+    #   acceptable google address component codes, from https://developers.google.com/maps/documentation/geocoding/intro
+    add.comp.state <- c("locality", "postal_code", "neighborhood", "park", "sublocality", "locality",
+                        paste0("administrative_area_level_", seq(1,5)))
+    add.comps <- unlist(l.geo$results[[1]]$address_components)
+    if (sum(add.comps[which(names(add.comps)=="types1")] %in% add.comp.state) > 0){
+      check.state <- T
+    } else {
+      check.state <- F
+    }
+    
+    # figure out: is this a good geocode?
+    if (check.status & check.ambig & check.state){
+      success[l] <- T
+      lat.location[l] <- l.geo$results[[1]]$geometry$location$lat
+      lon.location[l] <- l.geo$results[[1]]$geometry$location$lng
+    }
+    
+  }
+  
+}
 
 ## make final locations data frame
 df.locations <- rbind(df.locations.exist,
                       data.frame(
-                        location = locations,
-                        lat.location = sapply(geo.out, function(x) x["results"]$results[[1]]$geometry$location$lat),
-                        lon.location = sapply(geo.out, function(x) x["results"]$results[[1]]$geometry$location$lng)
+                        location = locations[success],
+                        lat.location = lat.location[success],
+                        lon.location = lon.location[success]
                       ))
 
 # status update
