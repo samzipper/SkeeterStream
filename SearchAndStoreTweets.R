@@ -53,7 +53,7 @@ db <- dbConnect(RSQLite::SQLite(), path.out)
 df.in <- dbReadTable(db, "tweets")
 
 # read in token which was created with script rtweet_SetUpToken.R
-r.token <- readRDS(file.path(path.expand("~/"), "twitter_token_skeeter.Rds"))
+r.token <- readRDS(file.path(out.dir, "twitter_token_skeeter.Rds"))
 
 # search twitter!
 tweets <- search_tweets2(search.str,
@@ -90,6 +90,8 @@ df.users <- df.users[df.users$location != "",]
 # replace % and # in user location with blank so geocode doesn't get messed up
 df.users$location <- gsub("%", " ",df.users$location)
 df.users$location <- gsub("#", " ",df.users$location)
+df.users$location <- gsub("$", " ",df.users$location)
+df.users$location <- gsub("^&", " ",df.users$location)
 
 # deal with emojis and other weird characters
 df.users$location <- iconv(df.users$location, "UTF-8", "ASCII", sub="")
