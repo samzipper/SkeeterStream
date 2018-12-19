@@ -21,8 +21,8 @@ require(dplyr)
 save.plots <- F
 
 # output directory: this is where the SQLite database is
-out.dir <- "C:/Users/Sam/Dropbox/Work/Twitter/SkeeterStream/"
-#out.dir <- "D:/Dropbox/Work/Twitter/AgroStream/"
+out.dir <- "C:/Users/gsas/OneDrive - The University of Kansas/Research/Twitter/SkeeterStream/"
+#out.dir <- "C:/Users/Sam/Dropbox/Work/Twitter/SkeeterStream/"
 
 # path to database
 path.out <- paste0(out.dir, "rTweetsOut.sqlite")
@@ -33,9 +33,9 @@ db <- dbConnect(RSQLite::SQLite(), path.out)
 # read in table
 df <- dbReadTable(db, "tweets")
 
-# trim to unique and rewrite
-df <- unique(df)
-dbWriteTable(db, "tweets", df, overwrite=T)
+## trim to unique and rewrite
+#df <- unique(df)
+#dbWriteTable(db, "tweets", df, overwrite=T)
 
 # when you're done, disconnect from database (this is when the data will be written)
 dbDisconnect(db)

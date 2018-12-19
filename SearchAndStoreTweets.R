@@ -31,7 +31,8 @@ search.str <- paste0("(mosquito OR mosquitos OR mosquitoes) since:", as.characte
 
 # output directory: save to Dropbox, not git repository, so it's automatically backed up
 # this is also where authentication info is stored
-out.dir <- "C:/Users/Sam/Dropbox/Work/Twitter/SkeeterStream/"
+out.dir <- "C:/Users/gsas/OneDrive - The University of Kansas/Research/Twitter/SkeeterStream/"
+#out.dir <- "C:/Users/Sam/Dropbox/Work/Twitter/SkeeterStream/"
 
 # path to save output data
 path.out <- paste0(out.dir, "rTweetsOut.sqlite")
@@ -91,7 +92,7 @@ df.users <- df.users[df.users$location != "",]
 df.users$location <- gsub("%", " ",df.users$location)
 df.users$location <- gsub("#", " ",df.users$location)
 df.users$location <- gsub("$", " ",df.users$location)
-df.users$location <- gsub("^&", " ",df.users$location)
+df.users$location <- gsub("&", "and",df.users$location)
 
 # deal with emojis and other weird characters
 df.users$location <- iconv(df.users$location, "UTF-8", "ASCII", sub="")
@@ -126,7 +127,7 @@ success <- rep(F, length(locations))
 
 # call geocode for each location
 maxtries <- 5
-for (l in 1396:length(locations)){
+for (l in 1:length(locations)){
   check.geocode <- F
   check.status <- F
   tries <- 0
