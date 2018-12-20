@@ -34,6 +34,10 @@ search.str <- paste0("(mosquito OR mosquitos OR mosquitoes) since:", as.characte
 out.dir <- "C:/Users/gsas/OneDrive - The University of Kansas/Research/Twitter/SkeeterStream/"
 #out.dir <- "C:/Users/Sam/Dropbox/Work/Twitter/SkeeterStream/"
 
+# register API key with google API
+gauth <- read.table(paste0(out.dir, "GoogleAuth.txt"), header=F, nrows=1, stringsAsFactors=F)[1,1]
+register_google(key=gauth)
+
 # path to save output data
 path.out <- paste0(out.dir, "rTweetsOut.sqlite")
 
